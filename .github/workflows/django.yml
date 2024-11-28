@@ -29,6 +29,7 @@ jobs:
     - name: Set up secrets file
       run: |
         echo "$SECRETS_JSON" > /home/runner/work/TalkStock-BE/TalkStock-BE/secrets.json
+        cat /home/runner/work/TalkStock-BE/TalkStock-BE/secrets.json  # 확인용 출력
 
     - name: Run Tests
       run: |

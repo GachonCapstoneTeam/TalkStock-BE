@@ -25,6 +25,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt --timeout=100
+
+    - name: Set up secrets file
+      run: |
+        echo "$SECRETS_JSON" > /home/runner/work/TalkStock-BE/TalkStock-BE/secrets.json
+
     - name: Run Tests
       run: |
         python manage.py test

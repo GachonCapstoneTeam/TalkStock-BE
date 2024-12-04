@@ -26,6 +26,7 @@ jobs:
     # Docker 빌드
     - name: Build Docker image
       run: |
+        echo '${{ secrets.SECRET_JSON }}' > secrets.json
         docker build -t djangoserver:latest .
 
 

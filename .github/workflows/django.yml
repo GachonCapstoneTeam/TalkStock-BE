@@ -12,6 +12,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
     steps:
     # 코드 체크아웃
     - name: Checkout code
@@ -27,7 +30,11 @@ jobs:
     - name: Build Docker image
       run: |
         echo '${{ secrets.SECRET_JSON }}' > secrets.json
-        docker build -t djangoserver:latest .
+        docker build --build-arg SECRET_KEY=${{ secrets.SECRET_KEY }} -t djangoserver:latest .
+
+    - name: Debug secrets.json
+      run: cat secrets.json | grep "SECRET_KEY"
+
 
 
     - name: Log in to Docker Hub

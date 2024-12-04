@@ -13,6 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # secrets.json 복사
 COPY secrets.json /app/secrets.json
 
+RUN ls -l /app/secrets.json
+
 # Django 프로젝트 복사
 COPY . .
 

@@ -30,8 +30,7 @@ jobs:
         docker build -t djangoserver:latest .
 
     - name: Debug secrets.json
-      run: cat secrets.json
-        grep "SECRET_KEY" secrets.json
+      run: cat secrets.json | grep "SECRET_KEY"
 
 
 

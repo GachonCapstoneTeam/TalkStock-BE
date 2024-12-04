@@ -31,6 +31,8 @@ jobs:
 
     - name: Debug secrets.json
       run: cat secrets.json
+        grep "SECRET_KEY" secrets.json
+
 
 
     - name: Log in to Docker Hub

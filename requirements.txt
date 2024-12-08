@@ -8,3 +8,4 @@ tzdata==2024.2
 django
 gunicorn
 psycopg2-binary
+dnspython==2.4.0

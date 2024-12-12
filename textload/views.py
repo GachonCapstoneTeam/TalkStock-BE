@@ -15,7 +15,7 @@ from pymongo import MongoClient
 
 
 def connect_to_mongo():
-    client = MongoClient("mongodb://localhost:27017/")  # 연결 문자열을 필요에 따라 변경
+    client = MongoClient("mongodb://mongodb:27017/")  # 연결 문자열을 필요에 따라 변경
     db = client["report_database"]  # 데이터베이스 이름
     return db
 
@@ -196,23 +196,16 @@ def hello_world(request):
 
 @api_view(['GET'])
 def content(request):
-    # MongoDB 클라이언트 연결
-    client = MongoClient("mongodb://localhost:27017/")
-    db = client['report_database']  # MongoDB 데이터베이스 이름
-    collection = db['reports']  # MongoDB 컬렉션 이름
+    client = MongoClient("mongodb://mongodb:27017/")
+    db = client['report_database']
+    collection = db['reports']
 
-    # 모든 문서에서 Content 필드 가져오기
-    data_cursor = collection.find({}, {"Content": 1, "_id": 0})
+    # 작성일 기준으로 정렬하여 최신 데이터 반환
+    data_cursor = collection.find({}, {"_id": 0}).sort("작성일", -1)  # 작성일 기준 내림차순 정렬
+    data_list = list(data_cursor)
 
-    # 첫 번째 문서 가져오기
-    first_document = next(data_cursor, None)
+    response_data = {
+        "contents": data_list
+    }
 
-    # Log or print to check the data
-    print(f"First document: {first_document}")  # Log the document
-
-    if first_document:
-        first_content = first_document.get('Content', None)
-    else:
-        first_content = None
-
-    return Response({"content": first_content})
+    return JsonResponse(response_data, safe=False)

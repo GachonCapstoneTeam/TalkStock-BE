@@ -50,6 +50,7 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
+
 INSTALLED_APPS = [
     'corsheaders',
     'textload',
@@ -96,7 +97,6 @@ WSGI_APPLICATION = 'TalkStockReport.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 
 
 # Password validation

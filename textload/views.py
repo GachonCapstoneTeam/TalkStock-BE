@@ -271,6 +271,11 @@ def fetch_stock_and_industry_reports(category_name, category_url, pages):
             detail_url = f"https://finance.naver.com/research/{detail_link}" if not detail_link.startswith(
                 "http") else detail_link
             company = cols[2].text.strip()
+
+            # Check if the company is in SECURITIES_CONFIGS
+            if company not in SECURITIES_CONFIGS:
+                continue
+
             pdf_link_tag = cols[3].find("a")
             pdf_url = pdf_link_tag["href"] if pdf_link_tag and "href" in pdf_link_tag.attrs else "PDF 없음"
             date = cols[4].text.strip()
@@ -350,11 +355,7 @@ def fetch_all_reports(pages=1):
     base_url = "https://finance.naver.com/research/"
     categories = {
         '종목분석 리포트': f"{base_url}company_list.naver",
-        '산업분석 리포트': f"{base_url}industry_list.naver",
-        '시황정보 리포트': f"{base_url}market_info_list.naver",
-        '투자정보 리포트': f"{base_url}invest_list.naver",
-        '경제분석 리포트': f"{base_url}economy_list.naver",
-        '채권분석 리포트': f"{base_url}debenture_list.naver",
+        '산업분석 리포트': f"{base_url}industry_list.naver"
     }
     all_reports = []
 
@@ -376,6 +377,12 @@ def fetch_all_reports(pages=1):
 fetch_all_reports(pages=2)
 print(df)
 
+df['Content'] = df['Content'].apply(lambda x: x.replace("\n", "") if pd.notnull(x) else x)
+df['PDF Content'] = df['PDF Content'].apply(lambda x: x.replace("\n", "") if pd.notnull(x) else x)
+
+df_cleaned = df.dropna(subset=['PDF Content'])
+
+
 # 딕셔너리 형태로 변환
 data_to_save = df.to_dict('records')
 
@@ -390,23 +397,16 @@ def hello_world(request):
 
 @api_view(['GET'])
 def content(request):
-    # MongoDB 클라이언트 연결
     client = MongoClient("mongodb://localhost:27017/")
-    db = client['report_database']  # MongoDB 데이터베이스 이름
-    collection = db['reports']  # MongoDB 컬렉션 이름
+    db = client['report_database']
+    collection = db['reports']
 
-    # 모든 문서에서 Content 필드 가져오기
-    data_cursor = collection.find({}, {"Content": 1, "_id": 0})
+    # 작성일 기준으로 정렬하여 최신 데이터 반환
+    data_cursor = collection.find({}, {"_id": 0}).sort("작성일", -1)  # 작성일 기준 내림차순 정렬
+    data_list = list(data_cursor)
 
-    # 첫 번째 문서 가져오기
-    first_document = next(data_cursor, None)
+    response_data = {
+        "contents": data_list
+    }
 
-    # Log or print to check the data
-    print(f"First document: {first_document}")  # Log the document
-
-    if first_document:
-        first_content = first_document.get('Content', None)
-    else:
-        first_content = None
-
-    return Response({"content": first_content})
+    return JsonResponse(response_data, safe=False)

@@ -3,15 +3,192 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from pymongo import MongoClient
-
-
-# Create your views here.
+import fitz  # PyMuPDF
+import logging
+import io
+from typing import List, Optional, Tuple, Dict, Union
 
 from flask import Flask, jsonify, request
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from pymongo import MongoClient
+
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+
+# PDF 텍스트 추출 클래스
+class PDFTextExtractor:
+    def __init__(self, pdf_source: Union[str, io.BytesIO]):
+        self.pdf_source = pdf_source
+        logging.basicConfig(level=logging.DEBUG)
+        self.logger = logging.getLogger(__name__)
+
+    def extract_text(
+            self,
+            page_number: int,
+            rect_coordinates: Tuple[float, float, float, float],
+            stop_keywords: Optional[List[Dict[str, Union[str, bool]]]] = None
+    ) -> str:
+        try:
+            # PDF 열기 (URL 또는 로컬 파일 경로)
+            if isinstance(self.pdf_source, str):
+                doc = fitz.open(self.pdf_source)
+            else:
+                doc = fitz.open("pdf", self.pdf_source)
+
+            # 페이지 가져오기
+            page = doc[page_number]
+
+            # 영역 지정
+            rect = fitz.Rect(*rect_coordinates)
+
+            # 해당 영역에서 텍스트 추출
+            text = page.get_text("text", clip=rect)
+
+            # 문서 닫기
+            doc.close()
+
+            # 줄 단위로 분리
+            lines = text.split('\n')
+
+            # 중단 키워드 처리
+            if stop_keywords:
+                for keyword_config in stop_keywords:
+                    keyword = keyword_config.get('keyword', '')
+                    exclude_two_before = keyword_config.get('exclude_keyword_two_before_line', False)
+
+                    for i, line in enumerate(lines):
+                        if keyword in line.strip():
+                            if exclude_two_before:
+                                # 키워드 2줄 전까지 텍스트 추출
+                                cut_index = max(0, i - 2)
+                                text = '\n'.join(lines[:cut_index])
+                            else:
+                                # 키워드 줄 전까지 텍스트 추출
+                                text = '\n'.join(lines[:i])
+
+                            break
+
+            return text.strip()
+
+        except Exception as e:
+            self.logger.error(f"PDF 텍스트 추출 중 오류 발생: {e}")
+            return ""
+
+
+# 증권사별 기본 설정 딕셔너리 (PDF 추출 설정)
+SECURITIES_CONFIGS = {
+    "SK증권": {
+        "page_num": 0,
+        "coordinates": (180, 150, 700, 690),
+        "stop_keywords": []
+    },
+    "교보증권": {
+        "page_num": 0,
+        "coordinates": (190, 240, 700, 655),
+        "stop_keywords": []
+    },
+    "나이스디앤비": {
+        "page_num": 1,
+        "coordinates": (180, 200, 700, 682),
+        "stop_keywords": []
+    },
+    "메리츠증권": {
+        "page_num": 0,
+        "coordinates": (210, 200, 700, 700),
+        "stop_keywords": [{"keyword": "EPS (원)", "exclude_keyword_two_before_line": False}]
+    },
+    "미래에셋증권": {
+        "page_num": 0,
+        "coordinates": (200, 170, 700, 650),
+        "stop_keywords": []
+    },
+    "삼성증권": {
+        "page_num": 0,
+        "coordinates": (200, 170, 700, 700),
+        "stop_keywords": [{"keyword": "분기 실적", "exclude_keyword_two_before_line": False}]
+    },
+    "신한투자증권": {
+        "page_num": 0,
+        "coordinates": (20, 190, 350, 560),
+        "stop_keywords": []
+    },
+    "유안타증권": {
+        "page_num": 0,
+        "coordinates": (30, 180, 400, 650),
+        "stop_keywords": [{"keyword": "Forecasts and valuations (K-IFRS 연결)", "exclude_keyword_two_before_line": False}]
+    },
+    "유진투자증권": {
+        "page_num": 0,
+        "coordinates": (30, 275, 680, 700),
+        "stop_keywords": [{"keyword": "시가총액(십억원)", "exclude_keyword_two_before_line": True}]
+    },
+    "키움증권": {
+        "page_num": 0,
+        "coordinates": (220, 190, 700, 850),
+        "stop_keywords": []
+    },
+    "하나증권": {
+        "page_num": 0,
+        "coordinates": (179, 140, 700, 850),
+        "stop_keywords": []
+    },
+    "한국IR협의회": {
+        "page_num": 1,
+        "coordinates": (40, 200, 370, 700),
+        "stop_keywords": [{"keyword": "Forecast earnings & Valuation", "exclude_keyword_two_before_line": False}]
+    },
+    "한국기술신용평가(주)": {
+        "page_num": 1,
+        "coordinates": (180, 200, 700, 682),
+        "stop_keywords": []
+    },
+    "한화투자증권": {
+        "page_num": 0,
+        "coordinates": (240, 220, 680, 800),
+        "stop_keywords": []
+    },
+}
+
+
+def download_and_process_pdf(pdf_url: str, company: str) -> str:
+    # 증권사 설정 가져오기
+    config = SECURITIES_CONFIGS.get(company)
+
+    # 설정이 없는 경우 처리
+    if not config:
+        print(f"{company}에 대한 설정이 없습니다.")
+        return ""
+
+    try:
+        # 1. PDF 다운로드
+        response = requests.get(pdf_url)
+        response.raise_for_status()
+
+        # 2. 메모리 버퍼에 PDF 로드
+        pdf_buffer = io.BytesIO(response.content)
+
+        try:
+            # 3. PDF 처리
+            extractor = PDFTextExtractor(pdf_buffer)
+            text = extractor.extract_text(
+                page_number=config.get('page_num', 1),
+                rect_coordinates=config.get('coordinates', (0, 0, 0, 0)),
+                stop_keywords=config.get('stop_keywords', [])
+            )
+
+            return text
+
+        finally:
+            # 4. 메모리 버퍼 닫기
+            pdf_buffer.close()
+
+    except requests.exceptions.RequestException as e:
+        print(f"PDF 다운로드 중 오류 발생: {e}")
+        return ""
+    except Exception as e:
+        print(f"PDF 처리 중 오류 발생: {e}")
+        return ""
 
 
 def connect_to_mongo():
@@ -24,6 +201,15 @@ def insert_data_into_mongo(data):
     db = connect_to_mongo()
     collection = db["reports"]
 
+    # 기존 데이터 삭제
+    collection.delete_many({})
+    print("기존 데이터가 삭제되었습니다.")
+
+    # 새로운 데이터 삽입
+    for entry in data:
+        if "PDF Content" not in entry:
+            entry["PDF Content"] = "None" # Default value if not extracted
+
     # 데이터 삽입
     if isinstance(data, list):
         collection.insert_many(data)
@@ -32,11 +218,10 @@ def insert_data_into_mongo(data):
 
     print("데이터가 MongoDB에 성공적으로 저장되었습니다!!")
 
-# Global DataFrame to store all reports
+# all report에 대한 전역 변수 설정
 df = pd.DataFrame()
 
-
-# Function to fetch detailed content for stock and industry reports
+# 보고서 상세 내용 크롤링 함수
 def fetch_report_details(detail_url):
     response = requests.get(detail_url)
     response.encoding = 'euc-kr'
@@ -61,7 +246,7 @@ def fetch_report_details(detail_url):
     return content
 
 
-# Function to crawl stock analysis and industry reports
+# 종목 분석, 산업 분석 리포트에 대한 크롤링
 def fetch_stock_and_industry_reports(category_name, category_url, pages):
     reports = []
     for page in range(1, pages + 1):
@@ -86,12 +271,21 @@ def fetch_stock_and_industry_reports(category_name, category_url, pages):
             detail_url = f"https://finance.naver.com/research/{detail_link}" if not detail_link.startswith(
                 "http") else detail_link
             company = cols[2].text.strip()
+
+            # Check if the company is in SECURITIES_CONFIGS
+            if company not in SECURITIES_CONFIGS:
+                continue
+
             pdf_link_tag = cols[3].find("a")
             pdf_url = pdf_link_tag["href"] if pdf_link_tag and "href" in pdf_link_tag.attrs else "PDF 없음"
             date = cols[4].text.strip()
             views = cols[5].text.strip()
 
+            # PDF 콘텐츠 추출
+            pdf_content = "" if pdf_url == "PDF 없음" else download_and_process_pdf(pdf_url,company)
+
             report_content = fetch_report_details(detail_url)
+
             reports.append({
                 'Category': category_name,
                 # '종목명': itemName,
@@ -101,11 +295,12 @@ def fetch_stock_and_industry_reports(category_name, category_url, pages):
                 '작성일': date,
                 'Views': views,
                 'Content': report_content,
+                'PDF Content': pdf_content,
             })
     return reports
 
 
-# Function to fetch market, investment, economy, debenture reports
+# 시황 정보, 투자 정보, 경제 분석, 채권 분석 리포트에 대한 크롤링
 def fetch_other_reports(category_name, category_url, pages):
     reports = []
     for page in range(1, pages + 1):
@@ -135,6 +330,9 @@ def fetch_other_reports(category_name, category_url, pages):
             date = cols[3].text.strip()
             views = cols[4].text.strip()
 
+            # PDF 콘텐츠 추출
+            #pdf_content = "" if pdf_url == "PDF 없음" else download_and_process_pdf(pdf_url, company)
+
             # 상세 페이지 데이터 가져오기
             report_content = fetch_report_details(detail_url)
 
@@ -146,21 +344,18 @@ def fetch_other_reports(category_name, category_url, pages):
                 '작성일': date,
                 'Views': views,
                 'Content': report_content,
+                #'PDF Content': pdf_content,
             })
     return reports
 
 
-# Main function to crawl all reports
+# 전체 보고서 크롤링 및 저장 함수
 def fetch_all_reports(pages=1):
     global df
     base_url = "https://finance.naver.com/research/"
     categories = {
         '종목분석 리포트': f"{base_url}company_list.naver",
-        '산업분석 리포트': f"{base_url}industry_list.naver",
-        '시황정보 리포트': f"{base_url}market_info_list.naver",
-        '투자정보 리포트': f"{base_url}invest_list.naver",
-        '경제분석 리포트': f"{base_url}economy_list.naver",
-        '채권분석 리포트': f"{base_url}debenture_list.naver",
+        '산업분석 리포트': f"{base_url}industry_list.naver"
     }
     all_reports = []
 
@@ -171,21 +366,27 @@ def fetch_all_reports(pages=1):
             reports = fetch_other_reports(category_name, category_url, pages)
         all_reports.extend(reports)
 
-    # Save all reports to DataFrame
+    # 모든 리포트를 DataFrame에 저장
     df = pd.DataFrame(all_reports)
     df['Content'] = df['Content'].apply(lambda x: f"'{x}'" if pd.notnull(x) else x)
     df.to_excel('all_reports.xlsx', index=False)
     print("All reports saved to all_reports.xlsx")
 
 
-# Run the function to fetch all reports
+# all report를 가져오기
 fetch_all_reports(pages=2)
 print(df)
 
-# Convert dataFrame to list of dictionaries
+df['Content'] = df['Content'].apply(lambda x: x.replace("\n", "") if pd.notnull(x) else x)
+df['PDF Content'] = df['PDF Content'].apply(lambda x: x.replace("\n", "") if pd.notnull(x) else x)
+
+df_cleaned = df.dropna(subset=['PDF Content'])
+
+
+# 딕셔너리 형태로 변환
 data_to_save = df.to_dict('records')
 
-# Save to MongoDB
+# MongoDB에 저장
 insert_data_into_mongo(data_to_save)
 print("데이터가 MongoDB에 저장되었습니다!!")
 
@@ -196,23 +397,16 @@ def hello_world(request):
 
 @api_view(['GET'])
 def content(request):
-    # MongoDB 클라이언트 연결
     client = MongoClient("mongodb://localhost:27017/")
-    db = client['report_database']  # MongoDB 데이터베이스 이름
-    collection = db['reports']  # MongoDB 컬렉션 이름
+    db = client['report_database']
+    collection = db['reports']
 
-    # 모든 문서에서 Content 필드 가져오기
-    data_cursor = collection.find({}, {"Content": 1, "_id": 0})
+    # 작성일 기준으로 정렬하여 최신 데이터 반환
+    data_cursor = collection.find({}, {"_id": 0}).sort("작성일", -1)  # 작성일 기준 내림차순 정렬
+    data_list = list(data_cursor)
 
-    # 첫 번째 문서 가져오기
-    first_document = next(data_cursor, None)
+    response_data = {
+        "contents": data_list
+    }
 
-    # Log or print to check the data
-    print(f"First document: {first_document}")  # Log the document
-
-    if first_document:
-        first_content = first_document.get('Content', None)
-    else:
-        first_content = None
-
-    return Response({"content": first_content})
+    return JsonResponse(response_data, safe=False)

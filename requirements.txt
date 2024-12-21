@@ -9,3 +9,10 @@ django
 gunicorn
 psycopg2-binary
 dnspython==2.4.0
+pymongo==3.11.4
+PyMuPDF==1.25.0
+Flask==3.1.0
+requests==2.32.3
+beautifulsoup4==4.12.3
+pandas==2.2.3
+openpyxl==3.1.5

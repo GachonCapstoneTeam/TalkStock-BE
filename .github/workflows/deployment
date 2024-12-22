@@ -1,0 +1,29 @@
+name: Deploy to Linux Server!
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_be:
+    runs-on: self-hosted  # Linux 서버의 Runner에서 실행
+    steps:
+      # 1. Checkout Repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Docker 로그인
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD2 }}" | docker login -u "${{ secrets.DOCKER_USERNAME2 }}" --password-stdin
+
+      # 3. Pull Docker images
+      - name: Pull Docker images
+        run: |
+          docker-compose -f /home/reaction/talkstockreport-actions-runner/docker-compose.yml pull
+
+      # 4. Restart services with Docker Compose
+      - name: Restart services
+        run: |
+          docker-compose -f /home/reaction/talkstockreport-actions-runner/docker-compose.yml down
+          docker-compose -f /home/reaction/talkstockreport-actions-runner/docker-compose.yml up -d

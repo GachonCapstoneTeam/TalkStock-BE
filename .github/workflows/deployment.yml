@@ -1,4 +1,4 @@
-name: Deploy to Linux Server
+name: Deploy to Linux Server !
 
 on:
   push:

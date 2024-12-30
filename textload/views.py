@@ -192,7 +192,7 @@ def download_and_process_pdf(pdf_url: str, company: str) -> str:
 
 
 def connect_to_mongo():
-    client = MongoClient("mongodb://localhost:27017/")  # 연결 문자열을 필요에 따라 변경
+    client = MongoClient("mongodb://mongodb:27017/")  # 연결 문자열을 필요에 따라 변경
     db = client["report_database"]  # 데이터베이스 이름
     return db
 
@@ -397,7 +397,7 @@ def hello_world(request):
 
 @api_view(['GET'])
 def content(request):
-    client = MongoClient("mongodb://localhost:27017/")
+    client = MongoClient("mongodb://mongodb:27017/")
     db = client['report_database']
     collection = db['reports']
 

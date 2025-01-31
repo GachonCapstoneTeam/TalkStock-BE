@@ -7,14 +7,45 @@ import fitz  # PyMuPDF
 import logging
 import io
 from typing import List, Optional, Tuple, Dict, Union
-
 from flask import Flask, jsonify, request
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from pymongo import MongoClient
+import django
+import os
+import openpyxl
+import certifi
+import pandas as pd
+from django.http import JsonResponse
+
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lsa import LsaSummarizer  
+import nltk
+from nltk.corpus import stopwords  # stopwords import
+# Download stopwords punkt(if not already done)
+nltk.download('punkt_tab')
+nltk.download('punkt')
+nltk.download('stopwords')
+
+import openai
+
+# 발급받은 API 키 설정
+client = openai.Client(api_key = "OPENAI_API_KEY")
+
+
+# Set the settings module for the Django project
+os.environ.setdefault("DJANGO_SETTINGS_MODULE","TalkStockReport.settings")
+
+# Initialize Django
+django.setup()
+
+#check initialization Django
+#print("Django initialized successfully.")
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 
 # PDF 텍스트 추출 클래스
 class PDFTextExtractor:
@@ -191,15 +222,14 @@ def download_and_process_pdf(pdf_url: str, company: str) -> str:
         return ""
 
 
-def connect_to_mongo():
-    client = MongoClient("mongodb://mongodb:27017/")  # 연결 문자열을 필요에 따라 변경
-    db = client["report_database"]  # 데이터베이스 이름
-    return db
-
-
 def insert_data_into_mongo(data):
-    db = connect_to_mongo()
-    collection = db["reports"]
+    try:
+        client = MongoClient("mongodb://localhost:27017/")  # 연결 문자열을 필요에 따라 변경
+        db = client["report_database"]  # 데이터베이스 이름
+        collection = db["reports"]
+        print("Connected to MongoDB successfully!")
+    except Exception as e:
+        print(f"Error connecting to MongoDB: {e}")
 
     # 기존 데이터 삭제
     collection.delete_many({})
@@ -272,7 +302,7 @@ def fetch_stock_and_industry_reports(category_name, category_url, pages):
                 "http") else detail_link
             company = cols[2].text.strip()
 
-            # Check if the company is in SECURITIES_CONFIGS
+            # SECURITIES_CONFIGS에서 증권사 필터링
             if company not in SECURITIES_CONFIGS:
                 continue
 
@@ -288,7 +318,7 @@ def fetch_stock_and_industry_reports(category_name, category_url, pages):
 
             reports.append({
                 'Category': category_name,
-                # '종목명': itemName,
+                '종목명': itemName,
                 'Title': title,
                 '증권사': company,
                 'PDF URL': pdf_url,
@@ -372,6 +402,32 @@ def fetch_all_reports(pages=1):
     df.to_excel('all_reports.xlsx', index=False)
     print("All reports saved to all_reports.xlsx")
 
+# OpenAI API를 사용한 요약 함수
+def summarize_text_with_gpt(text):
+    """
+    Uses OpenAI's GPT API to summarize a given text.
+
+    Args:
+        text (str): The input text to summarize.
+
+    Returns:
+        str: The summarized text.
+    """
+    if not text or text.strip() == "":
+        return "No content available for summarization."
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "당신은 한국어 금융 보고서를 요약하는 AI입니다. 절대 영어를 사용하지 마세요. 모든 요약을 반드시 한국어로 작성해야 합니다"},
+                {"role": "user", "content": f"다음 금융 보고서를 한국어로 3문장으로 요약하세요. 절대 영어를 사용하지 마세요:\n{text}"}
+            ],
+            max_tokens=200
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return f"Error: {e}"    
 
 # all report를 가져오기
 fetch_all_reports(pages=2)
@@ -382,6 +438,15 @@ df['PDF Content'] = df['PDF Content'].apply(lambda x: x.replace("\n", "") if pd.
 
 df_cleaned = df.dropna(subset=['PDF Content'])
 
+# Apply the summarization function to the "PDF Content" column
+df['Summary'] = df['PDF Content'].astype(str).apply(lambda x: summarize_text_with_gpt(x) if pd.notnull(x) else "")
+df['PDF Summary'] = df['PDF Content'].astype(str).apply(lambda x: summarize_text_with_gpt(x) if pd.notnull(x) else "")
+
+# Save the updated DataFrame to a new Excel fileç
+output_file_path = "all_reports_with_summary.xlsx"
+df.to_excel(output_file_path, index=False)
+
+print(f"Summarization complete! The updated file is saved as: {output_file_path}")
 
 # 딕셔너리 형태로 변환
 data_to_save = df.to_dict('records')
@@ -397,7 +462,8 @@ def hello_world(request):
 
 @api_view(['GET'])
 def content(request):
-    client = MongoClient("mongodb://mongodb:27017/")
+    ca = certifi.where()
+    client = MongoClient("mongodb://localhost:27017/", tlsCAFile=ca)
     db = client['report_database']
     collection = db['reports']
 

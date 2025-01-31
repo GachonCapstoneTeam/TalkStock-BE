@@ -139,3 +139,23 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'report_database',  # MongoDB 데이터베이스 이름
+        'HOST': 'localhost',           # 로컬 호스트
+        'PORT': 27017,                 # MongoDB 기본 포트
+        'USER': '',                    # 필요 시 사용자 이름
+        'PASSWORD': '',                # 필요 시 비밀번호
+    }
+}

@@ -1,4 +1,4 @@
-name: Django Server Test
+name: Django Server Test !
 
 on:
   push:

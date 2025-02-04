@@ -224,7 +224,7 @@ def download_and_process_pdf(pdf_url: str, company: str) -> str:
 
 def insert_data_into_mongo(data):
     try:
-        client = MongoClient("mongodb://localhost:27017/")  # 연결 문자열을 필요에 따라 변경
+        client = MongoClient("mongodb://mongodb:27017/")  # 연결 문자열을 필요에 따라 변경
         db = client["report_database"]  # 데이터베이스 이름
         collection = db["reports"]
         print("Connected to MongoDB successfully!")
@@ -463,7 +463,7 @@ def hello_world(request):
 @api_view(['GET'])
 def content(request):
     ca = certifi.where()
-    client = MongoClient("mongodb://localhost:27017/", tlsCAFile=ca)
+    client = MongoClient("mongodb://mongodb:27017/", tlsCAFile=ca)
     db = client['report_database']
     collection = db['reports']
 

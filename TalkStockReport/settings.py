@@ -139,3 +139,16 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'your_db_name',
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': 'mongodb://mongodb:27017/',
+            'serverSelectionTimeoutMS': 5000,
+        }
+    }
+}
+

@@ -41,9 +41,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE","TalkStockReport.settings")
 # Initialize Django
 django.setup()
 
-#check initialization Django
-#print("Django initialized successfully.")
-
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
@@ -221,6 +218,21 @@ def download_and_process_pdf(pdf_url: str, company: str) -> str:
         print(f"PDF 처리 중 오류 발생: {e}")
         return ""
 
+def connect_to_mongo():
+    try:
+        ca = certifi.where()
+        mongo_uri = "mongodb://localhost:27017/" 
+        
+        client = MongoClient(mongo_uri, tlsCAFile=ca)
+        
+        db = client['report_database']
+        
+        print("Successfully connected to MongoDB!")
+        return db
+
+    except Exception as e:
+        print(f"MongoDB connection failed: {e}")
+        return None
 
 def insert_data_into_mongo(data):
     db = connect_to_mongo()

@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('textload/', include('textload.urls')),
+    path('bond/', include('textload.urls')),
+    path('stock/', include('textload.urls')),
+    path('market/', include('textload.urls')),
+    path('industry/', include('textload.urls')),
+    path('economic/', include('textload.urls')),
+    path('investment/', include('textload.urls'))
 ]

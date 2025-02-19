@@ -15,7 +15,7 @@ from pymongo import MongoClient
 
 
 def connect_to_mongo():
-    client = MongoClient("mongodb://mongodb:27017/")  # 연결 문자열을 필요에 따라 변경
+    client = MongoClient("mongodb://localhost:27017/")  # 연결 문자열을 필요에 따라 변경
     db = client["report_database"]  # 데이터베이스 이름
     return db
 
@@ -196,12 +196,109 @@ def hello_world(request):
 
 @api_view(['GET'])
 def content(request):
-    client = MongoClient("mongodb://mongodb:27017/")
+    client = MongoClient("mongodb://localhost:27017/")
     db = client['report_database']
     collection = db['reports']
 
     # 작성일 기준으로 정렬하여 최신 데이터 반환
     data_cursor = collection.find({}, {"_id": 0}).sort("작성일", -1)  # 작성일 기준 내림차순 정렬
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+
+@api_view(['GET'])
+def bond(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '채권분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "채권분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def stock(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '채권분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "종목분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def market(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '채권분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "시황분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def investment(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '채권분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "투자분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def economic(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '채권분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "경제분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def industry(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '채권분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "산업분석 리포트"}, {"_id": 0}).sort("작성일", -1)
     data_list = list(data_cursor)
 
     response_data = {

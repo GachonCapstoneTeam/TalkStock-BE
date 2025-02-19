@@ -1,0 +1,426 @@
+[33mcommit a692e0be0ad172bc22bb82c76c5588c68722e29c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mapi[m[33m, [m[1;31morigin/api[m[33m)[m
+Merge: 7f008a56 cc8b38db
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Thu Feb 20 02:32:41 2025 +0900
+
+    api 설정.
+
+[33mcommit 7f008a568ffa856ae277414dddc16ea7d823f1ab[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Thu Feb 20 02:28:26 2025 +0900
+
+    api 설정
+
+[33mcommit cc8b38db5710b473bec5fde34d6787132169050f[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: ChoSunHyun <hypo1016@gmail.com>
+Date:   Tue Feb 11 08:58:30 2025 +0900
+
+    Added category classification by industry
+
+[33mcommit a047360c0f2b47c7147623bb8736e978b37cb540[m
+Author: ChoSunHyun <hypo1016@gmail.com>
+Date:   Mon Feb 10 18:51:18 2025 +0900
+
+    Added category classification by industry
+
+[33mcommit c5e119193003bc3bb312ba63a9ac0489ae0d255f[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Feb 5 02:33:05 2025 +0900
+
+    Update settings.py
+
+[33mcommit 785ad20db1b0129a971feadf536d8de552a33cfe[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Feb 5 02:28:45 2025 +0900
+
+    Update settings.py
+
+[33mcommit 50f89fdfa8202e370cd1de442bd029b4d21809a0[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Feb 5 02:23:56 2025 +0900
+
+    Update views.py
+
+[33mcommit 6f62115784ebccf70d076300d925c1f27bb92c8b[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Feb 5 02:07:26 2025 +0900
+
+    Update deployment.yml
+
+[33mcommit 602bd30967eb5f612b5dd7e3063bd43f9bb2e32c[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Feb 5 01:34:44 2025 +0900
+
+    Update test.yml
+
+[33mcommit 60331b44494c7b5fee5aae37da2acb2307dbf7c9[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Feb 5 01:04:58 2025 +0900
+
+    Update views.py
+
+[33mcommit 627ee54a194b03563bc2ddf4ea431c7d7acc6329[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Feb 3 19:52:51 2025 +0900
+
+    Update test.yml
+
+[33mcommit d5a916e8dde05fc9869c1a7d06d09787dc704c30[m
+Author: ChoSunHyun <hypo1016@gmail.com>
+Date:   Fri Jan 31 13:57:28 2025 +0900
+
+    Ignore virtual environment folder
+
+[33mcommit 467142475ac8672a59803d351ab62e81d8ec4962[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 30 20:07:40 2024 +0900
+
+    Update views.py
+
+[33mcommit a4a3d2862bd786f3752403c82b3b09f9e7583e2f[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Dec 27 19:08:38 2024 +0900
+
+    Update test.yml
+
+[33mcommit a284d7175ec9aa6bddd86998471da9db3a230e09[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Dec 27 19:07:21 2024 +0900
+
+    Update test.yml
+
+[33mcommit 2f6b32eec6bedc5cf2ebc6edd0a3a406e11421da[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Dec 27 19:05:35 2024 +0900
+
+    Create test.yml
+
+[33mcommit 491a965a19947f6a52099b982fa5817b62ebac4f[m
+Merge: cd216c6a 42666975
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Thu Dec 26 23:49:15 2024 +0900
+
+    Merge pull request #4 from GachonCapstoneTeam/ver1
+    
+    test.py
+
+[33mcommit 426669750a2fcdd17bcaed86477c3dbeb4302883[m[33m ([m[1;31morigin/ver1[m[33m)[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Thu Dec 26 23:48:05 2024 +0900
+
+    test.py
+
+[33mcommit cd216c6ada085604763f2300dd54ce8ca33c695f[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 23 02:56:46 2024 +0900
+
+    Update deployment.yml
+
+[33mcommit 2488ab2d1604029aa6d209febec8f97a8a8350eb[m
+Merge: 7177c85a c6818250
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 23 02:54:09 2024 +0900
+
+    Merge pull request #3 from GachonCapstoneTeam/ver1
+    
+    secret key 테스트
+
+[33mcommit c681825080b7b8367c1ad7a176cc074e9bae6a56[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 23 02:53:03 2024 +0900
+
+    secret key 테스트
+
+[33mcommit 7177c85a645d82469dc7fed30da10aa40570a00d[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 23 01:59:43 2024 +0900
+
+    Update deployment.yml
+
+[33mcommit 53e670d1832497ed4e6d789549cbecd8377a3fef[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 23 01:57:00 2024 +0900
+
+    Update deployment.yml
+
+[33mcommit 0f165bbd9d43f8d744d0fb525aab32382210da28[m
+Merge: feaa8e5b 8eb3ddc1
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 23 01:52:02 2024 +0900
+
+    Merge pull request #2 from GachonCapstoneTeam/ver1
+    
+    docker-compose 수정
+
+[33mcommit feaa8e5bd66714f4964bafdc99751e15b05487f4[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 23 01:50:24 2024 +0900
+
+    Rename deployment to deployment.yml
+
+[33mcommit 499925c236a59d89af1b3b803e00cb26b968457b[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 23 01:49:53 2024 +0900
+
+    Create deployment
+
+[33mcommit 8eb3ddc16c2ca500da231313806f598d47165499[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Sun Dec 22 05:13:07 2024 +0900
+
+    docker-compose 수정
+
+[33mcommit 914f4975aec6a49a7a26bb40598fbd761c244a77[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Mon Dec 16 02:42:34 2024 +0900
+
+    Update django.yml
+
+[33mcommit 5dc39f81a1cfd2835a9b9a456010d22fb3ec1b5d[m
+Merge: 08315c34 4b3cb0fa
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Dec 13 15:38:25 2024 +0900
+
+    Merge pull request #1 from GachonCapstoneTeam/ver1
+    
+    Ver1
+
+[33mcommit 4b3cb0fa3db94000ea6e2088111d59e1c4a24971[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Fri Dec 13 15:36:27 2024 +0900
+
+    기능 최종
+
+[33mcommit 7094f95cffa3e7d0510edb603e8028cc00a98c22[m
+Merge: ce664f2f 08315c34
+Author: sunhyun <hypo1016@gmail.com>
+Date:   Thu Dec 12 21:25:42 2024 +0900
+
+    Merge branch 'ver1' of https://github.com/GachonCapstoneTeam/TalkStock-BE into ver1
+
+[33mcommit ce664f2f7c87a2011f7f2e12b8114c1988f5f92e[m
+Author: sunhyun <hypo1016@gmail.com>
+Date:   Thu Dec 12 21:15:59 2024 +0900
+
+     update the PDF data stored in the database
+
+[33mcommit b5ebaa3a552d395687c54b08b1f22dc0c53b711f[m
+Merge: 67210a14 e3131a2a
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Sun Dec 8 11:09:44 2024 +0900
+
+     update the PDF data stored in the database
+
+[33mcommit be715b34ff4732d03923c37c146c39e11aa57016[m[33m ([m[1;31morigin/server[m[33m, [m[1;32mserver[m[33m)[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Thu Dec 12 19:51:53 2024 +0900
+
+    서버 설정 (Docker로 배포)
+
+[33mcommit 08315c34df6774e33b4a849f69d84d2fb024234d[m[33m ([m[1;32mmain[m[33m)[m
+Merge: 67210a14 e3131a2a
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Sun Dec 8 11:09:44 2024 +0900
+
+    Merge branch 'main' of https://github.com/GachonCapstoneTeam/TalkStock-BE
+
+[33mcommit 67210a14e4b2d8f834d0d32305e1990cf587930f[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Sun Dec 8 11:09:13 2024 +0900
+
+    현재 본문 첫줄만 보내게 설정
+
+[33mcommit e3131a2a1b4de4029e84767da80ce8892855aa29[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:54:13 2024 +0900
+
+    Update django.yml
+
+[33mcommit 4ccdc04c48180b27ab507b920f0e5c4b08de76a4[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:52:49 2024 +0900
+
+    Update django.yml
+
+[33mcommit 3ca2c906d526e6d6fdcc460d9b7632ec41e5ecf0[m
+Merge: 62de0e70 a04deb0f
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:35:11 2024 +0900
+
+    Merge branch 'main' of https://github.com/GachonCapstoneTeam/TalkStock-BE
+
+[33mcommit 62de0e70563c1fc64a71133fcdfb3f23719acd61[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:35:09 2024 +0900
+
+    Dockerfile 생성
+
+[33mcommit a04deb0ffa2c89bb305baf2fab1e47ed6940febb[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:34:21 2024 +0900
+
+    Update django.yml
+
+[33mcommit b953133db01ed347c48e68366399cd947040639f[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:30:44 2024 +0900
+
+    Update django.yml
+
+[33mcommit e0a8e2cd25a3910e5232051e0e2250aeb31436ba[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:29:00 2024 +0900
+
+    Update django.yml
+
+[33mcommit cbed64d7eb5069a26127c39dc04d8bbabb617643[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:26:35 2024 +0900
+
+    Update django.yml
+
+[33mcommit a3f09af6f9409122dfdd3a7e009fba5cf589d04c[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:26:04 2024 +0900
+
+    Dockerfile 수정
+
+[33mcommit 412bc0119b200fc138d289bbaf286e642d57cdb0[m
+Merge: b91a3291 b2bfb861
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:19:42 2024 +0900
+
+    Merge branch 'main' of https://github.com/GachonCapstoneTeam/TalkStock-BE
+
+[33mcommit b91a329116f792cbe379550b7c4abec2369389c6[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 21:19:11 2024 +0900
+
+    Dockerfile 수정
+
+[33mcommit b2bfb8613ae08ec2fffd20c7a3bf84bc6cc82c55[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:44:00 2024 +0900
+
+    Update django.yml
+
+[33mcommit 8c2eb6ba2b77de6e439b66d3485016c6dabc0897[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:31:00 2024 +0900
+
+    Update django.yml
+
+[33mcommit 19cb65a139730deaede9f3dc513e610d1f7745dc[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:30:07 2024 +0900
+
+    Update django.yml
+
+[33mcommit 2191aedd9bfdd824ff27771d30002e99c10e4474[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:29:05 2024 +0900
+
+    Update django.yml
+
+[33mcommit c8567525e4d55a471a5292b96890d29f2e007a56[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:27:30 2024 +0900
+
+    Update django.yml
+
+[33mcommit 74add9cb9f125390086788d86457796ca16b1348[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:26:18 2024 +0900
+
+    Update django.yml
+
+[33mcommit 71a54a6fa60828ab6250b96a40ae740b2e0f4a17[m
+Merge: 7818597f 33957f1f
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:24:07 2024 +0900
+
+    Dockerfile 생성
+
+[33mcommit 7818597f551a7eb29a527f960a4207d96794c465[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:23:05 2024 +0900
+
+    Dockerfile 생성
+
+[33mcommit 33957f1ff1d9fb0af7eaa31f70562b2764a4baec[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Wed Dec 4 20:18:45 2024 +0900
+
+    Update django.yml
+
+[33mcommit 88454ff120c9d63313106300bc2022ac379ad3a7[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 05:13:08 2024 +0900
+
+    Update django.yml
+
+[33mcommit af38112d5a534847f782c4a1915c9f0c7b137332[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 05:11:31 2024 +0900
+
+    Update django.yml
+
+[33mcommit fd377003e7f5b3cdd07e74535f206c4b3b249d54[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 05:09:53 2024 +0900
+
+    Update django.yml
+
+[33mcommit 71331d6140e0242a3e1f6fbe671f625c5c0b371e[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 05:07:51 2024 +0900
+
+    Update django.yml
+
+[33mcommit 5fb15e46488374a0bc6d917f83c85f88ce59317e[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 05:06:07 2024 +0900
+
+    Update django.yml
+
+[33mcommit cd8b14848c95227240b07cb811da137ace61886c[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 05:04:31 2024 +0900
+
+    Update django.yml
+
+[33mcommit 28b0726d79a7cd7db559680e565e9c37e4c8e3b6[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 04:30:49 2024 +0900
+
+    Update django.yml
+
+[33mcommit ce0491ada6dcfc213ba8d2d4aac34f9b911a9dbb[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 04:28:53 2024 +0900
+
+    Update django.yml
+
+[33mcommit 0e4cbbdc19a0b4fa76aa29f8a94d8f31ad5d716d[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 04:26:53 2024 +0900
+
+    Create requirements.txt
+
+[33mcommit 59ed96daf06aca4da1f2652c0fad8e67fdd04ddc[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 04:25:01 2024 +0900
+
+    requirements.txt 추가
+
+[33mcommit 3c4603f90dc768699c546526f33f2233fe6247ae[m
+Author: Lee Jae Yong <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 04:21:34 2024 +0900
+
+    Create django.yml
+
+[33mcommit f070dce78939e58f024f283c04ab40c99ffdf07e[m
+Author: Sharon0320 <sharon0320@gachon.ac.kr>
+Date:   Fri Nov 29 04:20:45 2024 +0900
+
+    1차 (textload/originaltext/로 요청 시 200, originaltext 반환)

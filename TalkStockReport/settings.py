@@ -146,7 +146,7 @@ DATABASES = {
         'NAME': 'your_db_name',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb://mongodb:27017/',
+            'host': 'mongodb://localhost:27017/',
             'serverSelectionTimeoutMS': 5000,
         }
     }

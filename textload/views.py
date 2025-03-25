@@ -8,6 +8,13 @@ import logging
 import io
 from typing import List, Optional, Tuple, Dict, Union
 
+
+# Create your views here.
+import fitz  # PyMuPDF
+import logging
+import io
+from typing import List, Optional, Tuple, Dict, Union
+
 from flask import Flask, jsonify, request
 import requests
 from bs4 import BeautifulSoup
@@ -190,6 +197,10 @@ def download_and_process_pdf(pdf_url: str, company: str) -> str:
         print(f"PDF 처리 중 오류 발생: {e}")
         return ""
 
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+
+
+
 
 def connect_to_mongo():
     client = MongoClient("mongodb://localhost:27017/")  # 연결 문자열을 필요에 따라 변경
@@ -330,9 +341,6 @@ def fetch_other_reports(category_name, category_url, pages):
             date = cols[3].text.strip()
             views = cols[4].text.strip()
 
-            # PDF 콘텐츠 추출
-            #pdf_content = "" if pdf_url == "PDF 없음" else download_and_process_pdf(pdf_url, company)
-
             # 상세 페이지 데이터 가져오기
             report_content = fetch_report_details(detail_url)
 
@@ -344,18 +352,21 @@ def fetch_other_reports(category_name, category_url, pages):
                 '작성일': date,
                 'Views': views,
                 'Content': report_content,
-                #'PDF Content': pdf_content,
             })
     return reports
 
 
-# 전체 보고서 크롤링 및 저장 함수
+# Main function to crawl all reports
 def fetch_all_reports(pages=1):
     global df
     base_url = "https://finance.naver.com/research/"
     categories = {
         '종목분석 리포트': f"{base_url}company_list.naver",
-        '산업분석 리포트': f"{base_url}industry_list.naver"
+        '산업분석 리포트': f"{base_url}industry_list.naver",
+        '시황정보 리포트': f"{base_url}market_info_list.naver",
+        '투자정보 리포트': f"{base_url}invest_list.naver",
+        '경제분석 리포트': f"{base_url}economy_list.naver",
+        '채권분석 리포트': f"{base_url}debenture_list.naver",
     }
     all_reports = []
 
@@ -366,27 +377,21 @@ def fetch_all_reports(pages=1):
             reports = fetch_other_reports(category_name, category_url, pages)
         all_reports.extend(reports)
 
-    # 모든 리포트를 DataFrame에 저장
+    # Save all reports to DataFrame
     df = pd.DataFrame(all_reports)
     df['Content'] = df['Content'].apply(lambda x: f"'{x}'" if pd.notnull(x) else x)
     df.to_excel('all_reports.xlsx', index=False)
     print("All reports saved to all_reports.xlsx")
 
 
-# all report를 가져오기
+# Run the function to fetch all reports
 fetch_all_reports(pages=2)
 print(df)
 
-df['Content'] = df['Content'].apply(lambda x: x.replace("\n", "") if pd.notnull(x) else x)
-df['PDF Content'] = df['PDF Content'].apply(lambda x: x.replace("\n", "") if pd.notnull(x) else x)
-
-df_cleaned = df.dropna(subset=['PDF Content'])
-
-
-# 딕셔너리 형태로 변환
+# Convert dataFrame to list of dictionaries
 data_to_save = df.to_dict('records')
 
-# MongoDB에 저장
+# Save to MongoDB
 insert_data_into_mongo(data_to_save)
 print("데이터가 MongoDB에 저장되었습니다!!")
 
@@ -410,3 +415,131 @@ def content(request):
     }
 
     return JsonResponse(response_data, safe=False)
+
+
+@api_view(['GET'])
+def bond(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '채권분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "채권분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def stock(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '종목분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "종목분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def market(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '시황정보 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "시황정보 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def investment(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '투자정보 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "투자정보 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def economic(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '경제분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "경제분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+@api_view(['GET'])
+def industry(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    # '산업분석 리포트' 항목만 필터링하여 작성일 기준 내림차순 정렬
+    data_cursor = collection.find({"Category": "산업분석 리포트"}, {"_id": 0}).sort("작성일", -1)
+    data_list = list(data_cursor)
+
+    response_data = {
+        "contents": data_list
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+
+@api_view(['GET'])
+def search_reports(request):
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client['report_database']
+    collection = db['reports']
+
+    query = request.GET.get('q', '')  # 검색 키워드 가져오기
+
+    if query:
+        # MongoDB의 $or 연산자로 Title과 Content에서 검색
+        data_cursor = collection.find(
+            {
+                "$or": [
+                    {"Title": {"$regex": query, "$options": "i"}},  # 대소문자 무시
+                    {"Content": {"$regex": query, "$options": "i"}}
+                ]
+            },
+            {"_id": 0}
+        ).sort("작성일", -1)  # 최신순 정렬
+
+        data_list = list(data_cursor)
+
+        response_data = {
+            "contents": data_list
+        }
+
+        return JsonResponse(response_data, safe=False)
+
+    return JsonResponse({"message": "검색어를 입력하세요."}, status=400)

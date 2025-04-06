@@ -362,11 +362,7 @@ def fetch_all_reports(pages=1):
     base_url = "https://finance.naver.com/research/"
     categories = {
         '종목분석 리포트': f"{base_url}company_list.naver",
-        '산업분석 리포트': f"{base_url}industry_list.naver",
-        '시황정보 리포트': f"{base_url}market_info_list.naver",
-        '투자정보 리포트': f"{base_url}invest_list.naver",
-        '경제분석 리포트': f"{base_url}economy_list.naver",
-        '채권분석 리포트': f"{base_url}debenture_list.naver",
+        '산업분석 리포트': f"{base_url}industry_list.naver"
     }
     all_reports = []
 

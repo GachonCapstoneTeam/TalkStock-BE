@@ -1,8 +1,6 @@
 import requests
-import pandas as pd
 from bs4 import BeautifulSoup
-from typing import Dict,List
-from . import pdfToText as pdf
+from . import pdfToText as pdf        
 # from pdfToText import download_and_process_pdf2 # PDF 함수 사용을 위해
 # from pdfToText import SECURITIES_CONFIGS # 증권사 설정도 pdfToText에서 불러오기
 
@@ -258,37 +256,3 @@ def fetch_other_reports(category_name, category_url, pages):
                 'Content': report_content,
             })
     return reports
-
-
-##### 전체 보고서 크롤링 및 저장 함수 #####
-def fetch_all_reports(pages=1):
-    global df
-    base_url = "https://finance.naver.com/research/"
-    categories = {
-        '종목분석 리포트': f"{base_url}company_list.naver",
-        '산업분석 리포트': f"{base_url}industry_list.naver",
-        # '시황정보 리포트': f"{base_url}market_info_list.naver",
-        # '투자정보 리포트': f"{base_url}invest_list.naver",
-        # '경제분석 리포트': f"{base_url}economy_list.naver",
-        # '채권분석 리포트': f"{base_url}debenture_list.naver",
-    }
-    # 업종별 종목 매핑 가져오기
-    industry_mapping = fetch_industry_data()
-
-    all_reports = []
-
-    for category_name, category_url in categories.items():
-        if category_name == '종목분석 리포트':
-            reports = fetch_stock_reports(category_name, category_url, pages, industry_mapping)
-        elif category_name == '산업분석 리포트':
-            reports = fetch_industry_reports(category_name, category_url, pages)
-        else:
-            reports = fetch_other_reports(category_name, category_url, pages)
-
-        all_reports.extend(reports)
-
-    # Save all reports to DataFrame
-    df = pd.DataFrame(all_reports)
-    df['Content'] = df['Content'].apply(lambda x: f"'{x}'" if pd.notnull(x) else x)
-    df.to_excel('all_reports.xlsx', index=False)
-    print("All reports saved to all_reports.xlsx")
